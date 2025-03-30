@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { BASE_URL } from "./consts";
 
-import { CheckoutSession, ApiResponse } from "./types";
+import { CheckoutSession, ApiResponse, FetchHistoricalCheckoutInput } from "./types";
 
 export class OrbitalPayBackendClient {
     private api: AxiosInstance;
@@ -64,11 +64,42 @@ export class OrbitalPayBackendClient {
         }
     }
 
-    async fetchHistoricalCheckoutSessions(): Promise<ApiResponse<CheckoutSession[]>> {
+    async fetchHistoricalCheckoutSessions(input: FetchHistoricalCheckoutInput): Promise<ApiResponse<CheckoutSession[]>> {
+        let { count, last_timestamp, order } = input;
+        if (count === undefined) {
+            count = 10;
+        } else {
+            if (count > 100) {
+                count = 100;
+            }
+            if (count < 1) {
+                count = 1;
+            }
+        }
+        if (order === undefined) {
+            order = "DESCENDING";
+        } else {
+            if (order !== "ASCENDING" && order !== "DESCENDING") {
+                throw new Error("Invalid order parameter. Use 'ASCENDING' or 'DESCENDING'.");
+            }
+        }
+        if (last_timestamp === undefined) {
+            if (order === "ASCENDING") {
+                last_timestamp = 0;
+            } else {
+                last_timestamp = Date.now() + 5000;
+            }
+        }
+        
         try {
             const response = await this.api.get("/merchants/fetch-checkouts", {
                 headers: {
                     "x-api-key": this.privateKey,
+                },
+                params: {
+                    limit: count,
+                    start_after: last_timestamp,
+                    order: order,
                 }
             });
             const data = response.data;

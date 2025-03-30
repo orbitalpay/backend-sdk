@@ -18,3 +18,9 @@ export interface CheckoutSession {
     txhash?: string;
     callbackUrl: string;
 }
+
+export interface FetchHistoricalCheckoutInput {
+    count?: number;
+    last_timestamp?: number;
+    order?: string | undefined;
+}

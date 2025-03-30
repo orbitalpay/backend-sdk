@@ -28,3 +28,21 @@ const checkoutSession = await client.fetchCheckoutSession(response.data?.transac
 // Fetch all historical checkout sessions created by your merchant
 const historicalCheckouts = await client.fetchHistoricalCheckoutSessions();
 ```
+
+The `fetchHistoricalCheckoutSessions` is paginated.
+
+```typescript
+// Number of items to fetch, defaults to 10
+const count = 20;
+// Timestamp of the last item fetched in the previous call, default: undefined
+const last_timestamp = 1690000000;
+// Order of the items, default: "ASCENDING", can be "ASCENDING" or "DESCENDING"
+const order = "ASCENDING";
+
+// Any parameter can be omitted
+const historicalCheckouts = await client.fetchHistoricalCheckoutSessions({
+  count,
+  last_timestamp,
+  order,
+});
+```
