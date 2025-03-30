@@ -1,6 +1,6 @@
 {
   "name": "@orbitalpay/backend",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Integrate Orbital Pay into your backend.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
